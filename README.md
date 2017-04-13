@@ -4,6 +4,7 @@
 * Tf-Idf
 * Tf-Isf
 * Length
+* ...
 
 
 
