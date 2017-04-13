@@ -1,6 +1,6 @@
-#NaiveBayesHindiSummary
+# NaiveBayesHindiSummary
 
-###Features:
+### Features:
 * Tf-Idf
 * Tf-Isf
 * Length
@@ -8,7 +8,7 @@
 
 
 
-###Contributors:
+### Contributors:
 * Akshay Gupta: [akshaygu@usc.edu](mailto:akshaygu@usc.edu)
 * Amit Jha: [amitjha@usc.edu](mailto:amitjha@usc.edu)
 * Geetakshi Batra: [geetaksb@usc.edu](mailto:geetaksb@usc.edu)
