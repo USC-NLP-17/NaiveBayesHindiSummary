@@ -92,9 +92,9 @@ class Tokenizer():
             self.remove_only_space_words()
             # remove hyphenated words
             self.hyphenated_tokens()
-            t.generate_stem_dict()
-            t.remove_stop_words()
-            t.formSentence()
+            self.generate_stem_dict()
+            self.remove_stop_words()
+            self.formSentence()
     def print_tokens(self, print_list=None):
         '''done'''
         if print_list is None:
@@ -110,8 +110,8 @@ class Tokenizer():
             finalSentence +=word+" "
         self.final_Sentences.append(finalSentence)
 
-    def print_finalSentence(self, x):
-        fileName = 'complete_corpus\\machine_output\\tokenized' + str(x) + ".txt"
+    def print_finalSentence(self, x,fileName):
+        #fileName = 'complete_corpus\\machine_output\\tokenized' + str(x) + ".txt"
         f = open(fileName, "w+", encoding="utf8")
 
         for sentence in self.final_Sentences:
@@ -186,6 +186,17 @@ class Tokenizer():
         self.final_tokens = tokens
         return tokens
 
+def tokenize_testFile(fileName1):
+    res = []
+    o = Tokenizer()
+    o.read_from_file(fileName1)
+    o.generate_sentences()
+    o.tokenize()
+    for sentence in o.final_Sentences:
+        if (len(sentence.strip()) > 0):
+            data = sentence.strip() + " " + u"\u0964" + " "
+            res.append(data)
+    return res
 
 if __name__ == "__main__":
     for x in range(1, 21):
@@ -197,5 +208,15 @@ if __name__ == "__main__":
         t.generate_sentences()
         t.tokenize()
         # t.print_tokens(t.final_tokens)
-        t.print_finalSentence(x)
+        t.print_finalSentence(x,'complete_corpus\\machine_output\\tokenized' + str(x) + ".txt")
+
+        tSum = Tokenizer()
+        filePath1 = 'complete_corpus\\human_output\\'
+        fileName1 = filePath1 + "output" + str(x) + ".txt"
+        tSum.read_from_file(fileName1)
+        tSum.generate_sentences()
+        tSum.tokenize()
+        tSum.print_finalSentence(x,'complete_corpus\\machine_output\\tokenizedSummary' + str(x) + ".txt")
+
+
 
