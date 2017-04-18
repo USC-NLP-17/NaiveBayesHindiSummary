@@ -19,11 +19,11 @@ def tf_isf(m_d,total_files):
        main_dict[k]=v.split()
 	while number < total_files:
             number = number + 1
-			tf_per_sent_list = []
-			n_sentences = 0
-			idlst=[]
-			for k, v in main_dict.items():
-                if str(k).startswith(str(number)):
+	    tf_per_sent_list = []
+	    n_sentences = 0
+	    idlst=[]
+	    for k, v in main_dict.items():
+		if str(k).startswith(str(number)):
 					idlst.append(k)
 					n_sentences = n_sentences + 1
 					tf_sent_dict = {}
@@ -33,9 +33,9 @@ def tf_isf(m_d,total_files):
 						else:
 							tf_sent_dict.update({keyword:1})
 					tf_per_sent_list.append(tf_sent_dict)
-			sent_ids.append(idlst)#sentence ids
-			tfFinalList.append(tf_per_sent_list)
-			doc_sent_count.append(n_sentences)
+	   sent_ids.append(idlst)#sentence ids
+	   tfFinalList.append(tf_per_sent_list)
+	   doc_sent_count.append(n_sentences)
 
 	for sent_list in tfFinalList:
 		for dicts in sent_list:
