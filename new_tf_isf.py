@@ -15,8 +15,8 @@ def tf_isf(m_d,total_files):
 	sent_ids=[]
 	number = 0
 	main_dict=OrderedDict()
-    for k,v in m_d.items():
-       main_dict[k]=v.split()
+        for k,v in m_d.items():
+		main_dict[k]=v.split()
 	while number < total_files:
             number = number + 1
 	    tf_per_sent_list = []
