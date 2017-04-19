@@ -1,75 +1,71 @@
 import math
 import decimal
+from collections import OrderedDict
 
-def tf_idf(m_d): # main dictionary with key: sentId and value is a list of words ( Eg: key = 1.1 , value = ['hi,'hello'])
-    #main_dict={ '1.1': [ 'hi','hello'], '2.1': [ 'hirrrr','hellrrrrro']}
-    main_dict={}
+def tf_idf(m_d,total_files): # main dictionary with key: sentId and value is a list of words ( Eg: key = 1.1 , value = ['hi,'hello'])
+    #     #main_dict={ '1.1': [ 'hi','hello'], '2.1': [ 'hirrrr','hellrrrrro']}
+    main_dict=OrderedDict()
+    # 	 #has sentId:totalTF-idfScore key-val pair
+    for k,v in m_d.items():
+       main_dict[k]=v.split()
+    #main_dict['1.1']=['cat','dog','rat','horse','monkey','cat']
+    #main_dict['2.1']=['dog','dog','rat','horse','monkey','eagle','cat']
+    #main_dict['3.1']=['horse','dog','rat','horse','monkey','eagle','cat']
     tfList = []
     tf_dictionary = {}
     df_dictionary = {}
-    doc_count = 0
-    score = 0.0
-    for k, v in m_d.items():
-        main_dict[k] = v.split()
-
     idf_dictionary = {}
-
+    doc_count = 0
     iteration = 0
-
-    compare_list = ['1.1','2.1','3.1','4.1','5.1','6.1','7.1','8.1','9.1','10.1','11.1','12.1','13.1','14.1','15.1','16.1','17.1','18.1','19.1','20.1']#,'22.1','23.1','24.1','25.1']
-    for k, v in main_dict.items():
-        if k == '1.1':
-            doc_count = doc_count + 1
-            iteration = iteration + 1
-            tf_dictionary = {}
-        elif k == compare_list[iteration+1]: # a new article is encountered
-            doc_count = doc_count + 1
-            iteration = iteration + 1
+    number = 0
+    #compare_list = ['1.1','2.1','3.1','4.1','5.1','6.1','7.1','8.1','9.1','10.1','11.1','12.1','13.1','14.1','15.1','16.1','17.1','18.1','19.1','20.1','22.1','23.1','24.1','25.1']
+    while number < total_files:
+            number = number + 1
+            tf_dictionary= {}
+            for k, v in main_dict.items():
+                if str(k).startswith(str(number)):
+                    #print k
+                    for keyword in v:
+                        if keyword in tf_dictionary:
+                            tf_dictionary[keyword] = tf_dictionary[keyword] + 1
+                        else:
+                            tf_dictionary.update({keyword:1})
             tfList.append(tf_dictionary)
-            tf_dictionary = {}
 
-        for keyword in v:
-            if keyword in tf_dictionary:
-                tf_dictionary[keyword] = tf_dictionary[keyword] + 1
-            else:
-                tf_dictionary.update({keyword:1})
-
-
-    tfList.append(tf_dictionary) # for the last set of documents
-    print (tfList)
+    #print tfList
     for dct in tfList:
         maxtf = 0
         for word in dct:
             if dct[word] > maxtf:
                 maxtf = dct[word]
         for word in dct:
+            #print str(word)+" "+str(dct[word])
             dct[word] = dct[word] / float(maxtf)
 
-    #print (tfList)
-    print (df_dictionary)
     for dict1 in tfList:
-        #print (str(dict1)+"\n")
         for j in dict1:
-            #print (j)
             if j in df_dictionary:
-                print ("kkkkkkk")
                 df_dictionary[j] = df_dictionary[j] + 1
             else:
                 df_dictionary.update({j:1})
 
-    #print (df_dictionary)
+    #print df_dictionary
     #print "========================"
 
-    #print doc_count
+    doc_count = total_files
+
     for word in df_dictionary:
-        idf_score = 0
-        val1 = (doc_count / (1 + df_dictionary[word]))
+        #print word+" "+str(df_dictionary[word])
+        idf_score = 0.0
+        val1=0.0
+        val1 = float(doc_count/float(1 + df_dictionary[word]))
+        #print val1
         if val1 > 0:
             idf_score = math.log(val1 , 10)
 
         idf_dictionary.update({word:idf_score})
 
-    #print (idf_dictionary)
+    #print len(idf_dictionary)
 
     for dict1 in tfList:
         for word in dict1:
@@ -80,24 +76,20 @@ def tf_idf(m_d): # main dictionary with key: sentId and value is a list of words
     #return tfList
     #------------------------ tf-idf score for sentence
     #tfList	 : [{},{},{}..] each dictionary is for a doc and has (word:tf_idf)
-    ans={}
-    iteration = 0
-    for k, v in main_dict.items():
-        if k == '1.1':
+    ans=OrderedDict()
+    number = 0
+    while number < total_files:
+            number = number + 1
             score = 0.0
-            iteration = iteration + 1
-        elif k == compare_list[iteration+1]: # a new article is encountered
-            score = 0.0
-            iteration = iteration + 1
-        length = len(v)
-        if length == 0:
-            continue
-        for keyword in v:
-            if keyword in tfList[iteration - 1 ]:
-                score+=tfList[iteration - 1][keyword]#add tf-idf of words of sentence
-        #print (length)
-        score = (score*1.0) / length #normalized
-        #ans[k]=round(decimal.Decimal(score),4)
-        ans[k] = round(score, 4)
+            for k, v in main_dict.items():
+                if str(k).startswith(str(number)):
+                    length = len(v)
+                    for keyword in v:
+                        if keyword in tfList[number- 1]:
+                            score+=tfList[number- 1][keyword]#add tf-idf of words of sentence
+                    if length > 0:
+                        score = score*(1.0/length) #normalized
+                        ans[k]=round(decimal.Decimal(score),4)
 
-    return ans #has sentId:totalTF-idfScore key-val pair
+    #print ans
+    return ans

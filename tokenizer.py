@@ -46,7 +46,9 @@ class Tokenizer():
 
         text = self.text
         text = re.sub(r'(\d+)', r'', text)
+        text = text.replace(u'\ufeff','')
         text = text.replace('\n', '')
+        text = text.replace('\r', '')
         text = text.replace(u',', '')
         text = text.replace(u'"', '')
         text = text.replace(u'(', '')
@@ -181,6 +183,8 @@ class Tokenizer():
         # if not self.stemmed_word:
         #     self.generate_stem_dict()
         stopwords = [x.strip() for x in f.readlines()]
+        for j, eachStopWord in enumerate(stopwords):
+            stopwords[j] = stopwords[j].replace(u'\ufeff','')
         # stopwords = []
         tokens = [i for i in self.stemmed_word if unicode(i) not in stopwords]
         self.final_tokens = tokens
@@ -188,18 +192,21 @@ class Tokenizer():
 
 def tokenize_testFile(fileName1):
     res = []
+    sent = []
     o = Tokenizer()
     o.read_from_file(fileName1)
     o.generate_sentences()
+    sent = o.sentences
     o.tokenize()
     for sentence in o.final_Sentences:
         if (len(sentence.strip()) > 0):
             data = sentence.strip() + " " + u"\u0964" + " "
             res.append(data)
-    return res
+    return sent, res
 
 if __name__ == "__main__":
-    for x in range(1, 21):
+    no_of_inputs = 2           #No. of training files
+    for x in range(1, no_of_inputs+1):
         t = Tokenizer()
         filePath = 'complete_corpus\\input\\'
         fileName = filePath+"input"+str(x)+".txt"
