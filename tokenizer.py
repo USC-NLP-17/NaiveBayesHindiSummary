@@ -22,9 +22,11 @@ class Tokenizer():
     # self.final_tokens=[]
 
 
-    def read_from_file(self, filename):
+    def read_from_file(self, filename,id):
         f = codecs.open(filename, encoding='utf-8')
         self.text = f.read()
+        if id==1:
+            return
         self.clean_text()
 
     def generate_sentences(self):
@@ -194,7 +196,7 @@ def tokenize_testFile(fileName1):
     res = []
     sent = []
     o = Tokenizer()
-    o.read_from_file(fileName1)
+    o.read_from_file(fileName1,1)
     o.generate_sentences()
     sent = o.sentences
     o.tokenize()
@@ -205,13 +207,13 @@ def tokenize_testFile(fileName1):
     return sent, res
 
 if __name__ == "__main__":
-    no_of_inputs = 2           #No. of training files
+    no_of_inputs = 20           #No. of training files
     for x in range(1, no_of_inputs+1):
         t = Tokenizer()
         filePath = 'complete_corpus\\input\\'
         fileName = filePath+"input"+str(x)+".txt"
 
-        t.read_from_file(fileName)
+        t.read_from_file(fileName,0)
         t.generate_sentences()
         t.tokenize()
         # t.print_tokens(t.final_tokens)
@@ -219,8 +221,8 @@ if __name__ == "__main__":
 
         tSum = Tokenizer()
         filePath1 = 'complete_corpus\\human_output\\'
-        fileName1 = filePath1 + "output" + str(x) + ".txt"
-        tSum.read_from_file(fileName1)
+        fileName1 = filePath1 + "article" + str(x) + "_reference1.txt"
+        tSum.read_from_file(fileName1,0)
         tSum.generate_sentences()
         tSum.tokenize()
         tSum.print_finalSentence(x,'complete_corpus\\machine_output\\tokenizedSummary' + str(x) + ".txt")

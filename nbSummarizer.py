@@ -30,24 +30,25 @@ def read_from_file(filename):
     data = f.read()
     f.close()
     return data
-def merge(dict):
+def merge(dict,res_idf_v,res_isf_v,sentenceDictLen_v,id):
     LocalfeatureVec = {}
     for key in dict.keys():
-        # d1 = {"length": 0}
-        d = {"tfIsf": 0, "tfIdf": 0, "length": 0}  # , "label":'N'}
-        if key in res_idf.keys():
-            d["tfIdf"] = res_idf[key]
-        if key in res_isf.keys():
-            d["tfIsf"] = res_isf[key]
-        if key in sentenceDictLen.keys():
-            d["length"] = sentenceDictLen[key]
+        #d = {"tfIsf": 0}
+        d = {"tfIdf":0, "tfIsf": 0, "length": 0}  # , "label":'N'}
+
+        if key in res_idf_v.keys():
+            d["tfIdf"] = res_idf_v[key]
+        if key in res_isf_v.keys():
+            d["tfIsf"] = res_isf_v[key]
+        if key in sentenceDictLen_v.keys():
+            d["length"] = sentenceDictLen_v[key]
 
         LocalfeatureVec[key] = d
     return LocalfeatureVec
 
 if __name__ == "__main__":
-    no_of_inputs = 2          #No. of training files
-    no_of_testSet = 2         #No. of Test files
+    no_of_inputs = 20          #No. of training files
+    no_of_testSet = 20         #No. of Test files
     for x in range(1, no_of_inputs+1):
         fileContent = ''
         sentenceList = ''
@@ -78,7 +79,7 @@ if __name__ == "__main__":
     #call for tf-isf
     res_isf = tf_isf(sentenceDict,no_of_inputs)
     #merge into one dictionary
-    featureVec = merge(sentenceDict)
+    featureVec = merge(sentenceDict,res_idf,res_isf,sentenceDictLen,0)
     train = []
     for w in featureVec.keys():
         # print (featureVec[w])
@@ -104,8 +105,9 @@ if __name__ == "__main__":
         summary_list = []
         summaryFn = ''
 
-        fileNameTest = 'complete_corpus\\testFile\\testInput' + str(i) + ".txt"
-        originalTestFileList,fileContentTest = tokenize_testFile(fileNameTest)
+        fileNameTest = 'complete_corpus\\testFile\\input' + str(i) + ".txt"
+        originalTestFileList, fileContentTest = tokenize_testFile(fileNameTest)
+        #originalTestFileList = read_from_file(fileNameTest)
         originalTestFileList = originalTestFileList[0:-1]
 
         no_of_sentence_test = len(fileContentTest)
@@ -114,13 +116,13 @@ if __name__ == "__main__":
             sentenceDictTest[multi] = fileContentTest[y]
 
     # call for tf-idf
-        res_idf_test = tf_idf(sentenceDictTest,no_of_sentence_test)
+        res_idf_test = tf_idf(sentenceDictTest,1)
     # call for tf-isf
-        res_isf_test = tf_isf(sentenceDictTest,no_of_sentence_test)
+        res_isf_test = tf_isf(sentenceDictTest,1)
         for k in sentenceDictTest.keys():
             sentenceDictLenTest[k] = len(sentenceDictTest[k].split())
 
-        featureVecTest = merge(sentenceDictTest)
+        featureVecTest = merge(sentenceDictTest,res_idf_test,res_isf_test,sentenceDictLenTest,1)
 
         for w in featureVecTest.keys():
             test.append((featureVecTest[w]))
@@ -132,11 +134,13 @@ if __name__ == "__main__":
         for res in result:
             val = 'N' if (res._prob_dict['N'])>(res._prob_dict['Y']) else 'Y'
             # print(val+'  N:'+str(i._prob_dict['N']) +'     Y:'+str(i._prob_dict['Y']))
+            #if val =='Y':
+            #    ansWithSent[testIter] = res._prob_dict['Y']
             ansWithSent[testIter] = res._prob_dict['Y']
-            if(val=='Y'):
-                ans.append(originalTestFileList[testIter])
+            #if(val=='Y'):
+            #    ans.append(originalTestFileList[testIter])
             testIter+=1
-        totalCountofSum = math.ceil(len(ansWithSent)*0.3)
+        totalCountofSum =  math.ceil(len(ansWithSent)*0.3)
         sorted_ans = sorted(ansWithSent.items(),key=operator.itemgetter(1),reverse=True)
 
         for sr in sorted_ans:

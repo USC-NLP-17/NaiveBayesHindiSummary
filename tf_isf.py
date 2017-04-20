@@ -14,6 +14,7 @@ def tf_isf(m_d,total_files):
     doc_count = 0
     sent_ids=[]
     number = 0
+    #isf_dict = {}
     main_dict=OrderedDict()
     for k,v in m_d.items():
         main_dict[k]=v.split()
@@ -23,7 +24,7 @@ def tf_isf(m_d,total_files):
         n_sentences = 0
         idlst=[]
         for k, v in main_dict.items():
-            if str(k).startswith(str(number)):
+            if str(k).startswith(str(number)+'.'):
                     idlst.append(k)
                     n_sentences = n_sentences + 1
                     tf_sent_dict = {}
@@ -62,7 +63,7 @@ def tf_isf(m_d,total_files):
     isf_list = []
 
     id = 0
-    for dict1 in  sf_list:
+    for dict1 in sf_list:
         isf_dict = {}
         for w in dict1:
             isf = 0.0
@@ -72,6 +73,7 @@ def tf_isf(m_d,total_files):
                 isf = math.log(val1 , 10)
 
             isf_dict.update({w:isf})
+            #isf_dict[w] = isf
         id = id + 1
         isf_list.append(isf_dict)
 
@@ -87,7 +89,7 @@ def tf_isf(m_d,total_files):
                     sentdic[w] = sentdic[w] * isf_dict[w]
                 else:
                     sentdic[w] = 0
-    id = id + 1
+        id = id + 1
     ans=OrderedDict()
     #tf_isf_feature
     #[[{},{},{}..],[],[],..]

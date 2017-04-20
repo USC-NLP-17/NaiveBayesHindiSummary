@@ -23,7 +23,7 @@ def tf_idf(m_d,total_files): # main dictionary with key: sentId and value is a l
             number = number + 1
             tf_dictionary= {}
             for k, v in main_dict.items():
-                if str(k).startswith(str(number)):
+                if str(k).startswith(str(number)+'.'):
                     #print k
                     for keyword in v:
                         if keyword in tf_dictionary:
@@ -80,9 +80,10 @@ def tf_idf(m_d,total_files): # main dictionary with key: sentId and value is a l
     number = 0
     while number < total_files:
             number = number + 1
-            score = 0.0
+            #score = 0.0
             for k, v in main_dict.items():
-                if str(k).startswith(str(number)):
+                score = 0.0
+                if str(k).startswith(str(number)+'.'):
                     length = len(v)
                     for keyword in v:
                         if keyword in tfList[number- 1]:
